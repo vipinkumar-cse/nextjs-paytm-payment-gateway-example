@@ -1,9 +1,14 @@
 
 export default function paynow(req, res) {
-    if(req.method==="POST"){
+    console.log(req.body)
+
+
+    if (req.method === "POST") {
         res.send(req.body);
     }
-    else{
-        res.send("NO")
+    else {
+
+        console.log(req.method)
+        res.send("it's NO")
     }
 }
