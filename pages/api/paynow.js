@@ -1,13 +1,14 @@
 import https from "https";
 import PaytmConfig from "../../components/Paytm/config";
 import PaytmChecksum from "../../components/Paytm/Checksum";
+import Userdata from '../../Data/userdatagather';
 
 export default async function paynow(req, res) {
 
   if (req.method === "POST") {
     var reqBody = JSON.parse(req.body);
     var orderId = "RSGI" + Math.floor(Math.random(6) * 1000000);
-    var amount = req.body.amount;
+    var amount = reqBody.amount;
     var callbackUrl = "http://localhost:3000/api/paymentCallback"
     var userInfo = {
       custId: reqBody.custId, // CLIENT CUSTOMER ID
@@ -29,6 +30,8 @@ export default async function paynow(req, res) {
       },
       userInfo: userInfo,
     };
+    // console.log("Paytmparams +++++ ", paytmParams)              //printing paytmparams
+
 
     PaytmChecksum.generateSignature(
       JSON.stringify(paytmParams.body),
@@ -55,27 +58,43 @@ export default async function paynow(req, res) {
           "Content-Length": post_data.length,
         },
       };
+      // console.log(options);         //options
 
       var response = "";
       var post_req = https.request(options, function (post_res) {
         post_res.on("data", function (chunk) {
           response += chunk;
+
         });
+
+
+
 
         post_res.on("end", function () {
           response = JSON.parse(response);
-          //   console.log("txnToken:", response);
+
 
           res.send(JSON.stringify({ mid: PaytmConfig.PaytmConfig.mid, orderId: orderId, token: response.body.txnToken }));
 
+
+          // console.log("Halo1", req.body);
+          // console.log("halo2", paytmParams.body.txnAmount);
+          // console.log("hal3", paytmParams.body.userInfo);
+          Userdata(paytmParams.body.txnAmount);
+          Userdata(paytmParams.body.userInfo);
+
         });
       });
+
 
       post_req.write(post_data);
       post_req.end();
     });
   } else {
+
+
     res.send(req.body);
+
   }
 
 }

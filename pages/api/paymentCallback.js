@@ -1,6 +1,9 @@
+import Userdata from "../../Data/userdatagather"
 
 export default function paynow(req, res) {
-    console.log(req.body)
+    const Usertxninfo = req.body;
+    Userdata(Usertxninfo);
+
 
 
     if (req.method === "POST") {

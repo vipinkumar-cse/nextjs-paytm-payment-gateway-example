@@ -22,6 +22,8 @@ class PaytmChecksum {
         return decrypted;
     }
     static generateSignature(params, key) {
+        console.log(typeof params)
+        console.log(key);
         if (typeof params !== "object" && typeof params !== "string") {
             var error = "string or object expected, " + (typeof params) + " given.";
             return Promise.reject(error);
@@ -29,6 +31,7 @@ class PaytmChecksum {
         if (typeof params !== "string") {
             params = PaytmChecksum.getStringByParams(params);
         }
+        console.log(PaytmChecksum.generateSignatureByString(params, key));      // printing generatesignature...
         return PaytmChecksum.generateSignatureByString(params, key);
     }
 
